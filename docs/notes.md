@@ -1,0 +1,2 @@
+### cognitiveserviceslib notes
+
