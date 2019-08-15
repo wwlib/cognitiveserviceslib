@@ -5,3 +5,6 @@ docs
 hide
 node_modules
 src
+test
+dts-bundle-plugin.js
+yarn.lock

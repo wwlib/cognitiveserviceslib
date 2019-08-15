@@ -5,7 +5,7 @@ import AzureTTSController from './microsoft/AzureTTSController';
 import ASRController from './ASRController';
 import AsyncToken from './AsyncToken';
 import HotwordController from './HotwordController';
-import NLUController from './NLUController';
+import NLUController, { NLUIntentAndEntities, NLURequestOptions, NLULanguageCode } from './NLUController';
 import TTSController from './TTSController';
 
 export {
@@ -22,5 +22,8 @@ export {
     AsyncToken,
     HotwordController,
     NLUController,
+    NLUIntentAndEntities,
+    NLURequestOptions,
+    NLULanguageCode,
     TTSController
 }

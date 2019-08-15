@@ -10,9 +10,9 @@ declare module 'cognitiveserviceslib' {
     import ASRController from 'cognitiveserviceslib/ASRController';
     import AsyncToken from 'cognitiveserviceslib/AsyncToken';
     import HotwordController from 'cognitiveserviceslib/HotwordController';
-    import NLUController from 'cognitiveserviceslib/NLUController';
+    import NLUController, { NLUIntentAndEntities, NLURequestOptions, NLULanguageCode } from 'cognitiveserviceslib/NLUController';
     import TTSController from 'cognitiveserviceslib/TTSController';
-    export { LUISController, LUISResponse, LUISEntity, LUISIntent, AzureSpeechClient, VoiceRecognitionResponse, VoiceSynthesisResponse, AzureSpeechApiController, AzureTTSController, ASRController, AsyncToken, HotwordController, NLUController, TTSController };
+    export { LUISController, LUISResponse, LUISEntity, LUISIntent, AzureSpeechClient, VoiceRecognitionResponse, VoiceSynthesisResponse, AzureSpeechApiController, AzureTTSController, ASRController, AsyncToken, HotwordController, NLUController, NLUIntentAndEntities, NLURequestOptions, NLULanguageCode, TTSController };
 }
 
 declare module 'cognitiveserviceslib/microsoft/LUISController' {
