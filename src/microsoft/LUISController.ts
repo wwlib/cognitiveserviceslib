@@ -50,7 +50,7 @@ export default class LUISController extends NLUController {
      }
 
      set config(config: any) {
-         if (config && config.Microsoft.nluLUIS_endpoint && config.Microsoft.nluLUIS_appId && config.Microsoft.nluLUIS_subscriptionKey) {
+         if (config && config.Microsoft && config.Microsoft.nluLUIS_endpoint && config.Microsoft.nluLUIS_appId && config.Microsoft.nluLUIS_subscriptionKey) {
              this._config = config;
              this.endpoint = this._config.Microsoft.nluLUIS_endpoint;
              this.luisAppId = this._config.Microsoft.nluLUIS_appId;

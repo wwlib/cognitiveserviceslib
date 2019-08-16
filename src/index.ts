@@ -4,7 +4,7 @@ import AzureSpeechApiController from './microsoft/AzureSpeechApiController';
 import AzureTTSController from './microsoft/AzureTTSController';
 import ASRController from './ASRController';
 import AsyncToken from './AsyncToken';
-import HotwordController from './HotwordController';
+import HotwordController, { HotwordResult } from './HotwordController';
 import NLUController, { NLUIntentAndEntities, NLURequestOptions, NLULanguageCode } from './NLUController';
 import TTSController from './TTSController';
 
@@ -21,9 +21,10 @@ export {
     ASRController,
     AsyncToken,
     HotwordController,
+    HotwordResult,
     NLUController,
     NLUIntentAndEntities,
     NLURequestOptions,
     NLULanguageCode,
-    TTSController
+    TTSController    
 }

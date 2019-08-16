@@ -16,7 +16,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "needle": "^2.4.0",
-    "node-record-lpcm16": "^1.0.1",
+    "node-record-lpcm16": "^0.3.0",
     "request": "^2.88.0",
     "ws": "^6.1.2"
   },

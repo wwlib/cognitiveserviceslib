@@ -755,7 +755,7 @@ debug@=3.1.0:
   dependencies:
     ms "2.0.0"
 
-debug@^2.1.2, debug@^2.2.0, debug@^2.3.3, debug@^2.6.8:
+debug@^2.1.2, debug@^2.2.0, debug@^2.3.3:
   version "2.6.9"
   resolved "https://registry.npmjs.org/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
   dependencies:
@@ -1034,11 +1034,6 @@ find-cache-dir@^1.0.0:
     commondir "^1.0.1"
     make-dir "^1.0.0"
     pkg-dir "^2.0.0"
-
-find-root@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/find-root/-/find-root-1.1.0.tgz#abcfc8ba76f708c42a97b3d685b7e9450bfb9ce4"
-  integrity sha512-NKfW6bec6GfKc0SGx1e07QZY9PE99u0Bft/0rzSD5k3sO/vwkVUpDUKVm5Gpp5Ue3YfShPFTX2070tDs5kB9Ng==
 
 find-up@^2.1.0:
   version "2.1.0"
@@ -1880,12 +1875,10 @@ node-pre-gyp@^0.10.0:
     semver "^5.3.0"
     tar "^4"
 
-node-record-lpcm16@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.npmjs.org/node-record-lpcm16/-/node-record-lpcm16-1.0.1.tgz#2201dee8d7dc8fc4055ab1bd275154201433e635"
-  integrity sha512-H75GMOP8ErnF67m21+qSgj4USnzv5RLfm7OkEItdIi+soNKoJZpMQPX6umM8Cn9nVPSgd/dBUtc1msst5MmABA==
-  dependencies:
-    debug "^2.6.8"
+node-record-lpcm16@^0.3.0:
+  version "0.3.1"
+  resolved "https://registry.npmjs.org/node-record-lpcm16/-/node-record-lpcm16-0.3.1.tgz#df0b019397170a94cc9e82754588c8ce7f63f435"
+  integrity sha512-Mmsu7//hdbMEsaoWDqoC/chJIZHtYXzYq6GRMfIMA0mu+fc5bIh9eEMi4fHLYbQB3M4orbbf7cM4crvHTeqlfg==
 
 nopt@^4.0.1:
   version "4.0.1"

@@ -9,7 +9,7 @@ const fs = require('fs');
 // const configFile = root + '/data/config.json';
 // const config: any = require(configFile);
 
-export default class BingTTSController extends TTSController {
+export default class AzureTTSController extends TTSController {
 
     public audioContext: AudioContext;
     public masterVolumeGainNode: GainNode | undefined;
@@ -27,7 +27,7 @@ export default class BingTTSController extends TTSController {
             this.masterVolumeGainNode.gain.value = 1.0;
             this.masterVolumeGainNode.connect(this.audioContext.destination);
         }
-        this.client = new AzureSpeechClient(this._config.Microsoft.AzureSpeechSubscriptionKey);
+        this.client = new AzureSpeechClient(config);
     }
 
     set config(config: any) {
@@ -35,7 +35,7 @@ export default class BingTTSController extends TTSController {
     }
 
     SynthesizerStart(text: string, options?: any): AsyncToken<string> {
-        //console.log(`BingTTSController: SynthesizerStart: ${text}`);
+        //console.log(`AzureTTSController: SynthesizerStart: ${text}`);
         let token = new AsyncToken<string>();
         token.complete = new Promise<string>((resolve: any, reject: any) => {
             process.nextTick(() => { token.emit('Synthesizing'); });

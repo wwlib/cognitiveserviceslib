@@ -1,13 +1,8 @@
-import * as fs from 'fs';
-// import * as util from 'util';
-// import * as uuid from 'uuid';
 import * as needle from 'needle';
 import * as stream from 'stream';
 import * as querystring from 'querystring';
 
 import { VoiceRecognitionResponse, VoiceSynthesisResponse } from './models';
-
-// const debug = require('debug')('bingspeechclient');
 
 const ASIAN_LOCALES = ['zh-cn', 'zh-hk', 'zh-tw', 'ja-jp'];
 
@@ -52,11 +47,11 @@ const VOICES: { [key: string]: string } = {
 // TTS https://www.microsoft.com/cognitive-services/en-us/speech-api/documentation/api-reference-rest/bingvoiceoutput
 
 export class AzureSpeechClient {
-    private BING_SPEECH_TOKEN_ENDPOINT = 'https://azurespeechserviceeast.cognitiveservices.azure.com/sts/v1.0/issuetoken';
-    private BING_SPEECH_ENDPOINT_STT = 'https://eastus.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1';
-    private BING_SPEECH_ENDPOINT_TTS = 'https://eastus.tts.speech.microsoft.com/cognitiveservices/v1';
+    private AZURE_SPEECH_TOKEN_ENDPOINT = 'https://azurespeechserviceeast.cognitiveservices.azure.com/sts/v1.0/issuetoken';
+    private AZURE_SPEECH_ENDPOINT_STT = 'https://eastus.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1';
+    private AZURE_SPEECH_ENDPOINT_TTS = 'https://eastus.tts.speech.microsoft.com/cognitiveservices/v1';
 
-    private subscriptionKey: string;
+    private subscriptionKey: string = '';
 
     private token: string = '';
     private tokenExpirationDate: number = 0;
@@ -68,10 +63,17 @@ export class AzureSpeechClient {
 
     /**
       * @constructor
-      * @param {string} subscriptionKey Your Bing Speech subscription key.
+      * @param {string} subscriptionKey Your AZURE Speech subscription key.
      */
-    constructor(subscriptionKey: string) {
-        this.subscriptionKey = subscriptionKey;
+    constructor(config: any) {
+        if (config && config.Microsoft && config.Microsoft.AzureSpeechSubscriptionKey) {
+            this.subscriptionKey = config.Microsoft.AzureSpeechSubscriptionKey;
+            if (config.Microsoft.AzureSpeechTokenEndpoint) this.AZURE_SPEECH_TOKEN_ENDPOINT = config.Microsoft.AzureSpeechTokenEndpoint;
+            if (config.Microsoft.AzureSpeechEndpointStt) this.AZURE_SPEECH_ENDPOINT_STT = config.Microsoft.AzureSpeechEndpointStt;
+            if (config.Microsoft.AzureSpeechEndpointTts) this.AZURE_SPEECH_ENDPOINT_TTS = config.Microsoft.AzureSpeechEndpointTts;
+        } else {
+            console.log(`AzureSpeechClient: config: error: incomplete config:`, config);
+        }
     }
 
     /**
@@ -113,20 +115,20 @@ export class AzureSpeechClient {
                 };
 
                 return new Promise<VoiceRecognitionResponse>((resolve, reject) => {
-                    let endpoint = this.BING_SPEECH_ENDPOINT_STT + '?' + querystring.stringify(params);
+                    let endpoint = this.AZURE_SPEECH_ENDPOINT_STT + '?' + querystring.stringify(params);
                     needle.post(endpoint, input, options, (err: any, res: any, body: any) => {
                         if (err) {
                             return reject(err);
                         }
                         if (res.statusCode !== 200) {
-                            return reject(new Error(`Wrong status code ${res.statusCode} in Bing Speech API / synthesize`));
+                            return reject(new Error(`Wrong status code ${res.statusCode} in Azure Speech API / synthesize`));
                         }
                         resolve(body);
                     });
                 });
             })
             .catch((err: Error) => {
-                throw new Error(`bingspeech-api-client: Voice recognition failed : ${err.message}`);
+                throw new Error(`cognitiveserviceslib: Voice recognition failed : ${err.message}`);
             });
     }
 
@@ -150,7 +152,7 @@ export class AzureSpeechClient {
                 });
             })
             .catch((err: Error) => {
-                throw new Error(`bingspeech-api-client: Voice synthesis failed: ${err.message}`);
+                throw new Error(`cognitiveserviceslib: Voice synthesis failed: ${err.message}`);
             });
     }
 
@@ -185,16 +187,16 @@ export class AzureSpeechClient {
                         'X-Microsoft-OutputFormat': this.AUDIO_OUTPUT_FORMAT,
                         'X-Search-AppId': '00000000000000000000000000000000',
                         'X-Search-ClientID': '00000000000000000000000000000000',
-                        'User-Agent': 'bingspeech-api-client'
+                        'User-Agent': 'cognitiveserviceslib'
                     },
                     open_timeout: 5000,
                     read_timeout: 5000
                 };
 
-                return needle.post(this.BING_SPEECH_ENDPOINT_TTS, ssml, options);
+                return needle.post(this.AZURE_SPEECH_ENDPOINT_TTS, ssml, options);
             })
             .catch((err: Error) => {
-                throw new Error(`bingspeech-api-client: Voice synthesis failed: ${err.message}`);
+                throw new Error(`cognitiveserviceslib: Voice synthesis failed: ${err.message}`);
             });
     }
 
@@ -216,12 +218,12 @@ export class AzureSpeechClient {
         };
 
         return new Promise((resolve, reject) => {
-            needle.post(this.BING_SPEECH_TOKEN_ENDPOINT, null, options, (err, res, body) => {
+            needle.post(this.AZURE_SPEECH_TOKEN_ENDPOINT, null, options, (err, res, body) => {
                 if (err) {
                     return reject(err);
                 }
                 if (res.statusCode !== 200) {
-                    return reject(new Error(`Wrong status code ${res.statusCode} in Bing Speech API / token`));
+                    return reject(new Error(`Wrong status code ${res.statusCode} in Azure Speech API / token`));
                 }
                 resolve(body);
             });

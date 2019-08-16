@@ -2,6 +2,8 @@
 
 A library for connecting to cognitive services like Azure, LUIS, etc.
 
+Based on: https://www.npmjs.com/package/bingspeech-api-client
+
 #### installation
 
 yarn add cognitiveserviceslib

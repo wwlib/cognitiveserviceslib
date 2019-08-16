@@ -9,10 +9,10 @@ declare module 'cognitiveserviceslib' {
     import AzureTTSController from 'cognitiveserviceslib/microsoft/AzureTTSController';
     import ASRController from 'cognitiveserviceslib/ASRController';
     import AsyncToken from 'cognitiveserviceslib/AsyncToken';
-    import HotwordController from 'cognitiveserviceslib/HotwordController';
+    import HotwordController, { HotwordResult } from 'cognitiveserviceslib/HotwordController';
     import NLUController, { NLUIntentAndEntities, NLURequestOptions, NLULanguageCode } from 'cognitiveserviceslib/NLUController';
     import TTSController from 'cognitiveserviceslib/TTSController';
-    export { LUISController, LUISResponse, LUISEntity, LUISIntent, AzureSpeechClient, VoiceRecognitionResponse, VoiceSynthesisResponse, AzureSpeechApiController, AzureTTSController, ASRController, AsyncToken, HotwordController, NLUController, NLUIntentAndEntities, NLURequestOptions, NLULanguageCode, TTSController };
+    export { LUISController, LUISResponse, LUISEntity, LUISIntent, AzureSpeechClient, VoiceRecognitionResponse, VoiceSynthesisResponse, AzureSpeechApiController, AzureTTSController, ASRController, AsyncToken, HotwordController, HotwordResult, NLUController, NLUIntentAndEntities, NLURequestOptions, NLULanguageCode, TTSController };
 }
 
 declare module 'cognitiveserviceslib/microsoft/LUISController' {
@@ -61,7 +61,7 @@ declare module 'cognitiveserviceslib/microsoft/AzureSpeechApiController' {
     import { AzureSpeechClient } from 'cognitiveserviceslib/microsoft/AzureSpeechClient';
     import ASRController from 'cognitiveserviceslib/ASRController';
     import AsyncToken from 'cognitiveserviceslib/AsyncToken';
-    export default class BingSpeechApiController extends ASRController {
+    export default class AzureSpeechApiController extends ASRController {
         client: AzureSpeechClient;
         constructor(config: any);
         config: any;
@@ -74,7 +74,7 @@ declare module 'cognitiveserviceslib/microsoft/AzureTTSController' {
     import { AzureSpeechClient } from 'cognitiveserviceslib/microsoft/AzureSpeechClient';
     import TTSController from 'cognitiveserviceslib/TTSController';
     import AsyncToken from 'cognitiveserviceslib/AsyncToken';
-    export default class BingTTSController extends TTSController {
+    export default class AzureTTSController extends TTSController {
         audioContext: AudioContext;
         masterVolumeGainNode: GainNode | undefined;
         client: AzureSpeechClient;
@@ -146,9 +146,9 @@ declare module 'cognitiveserviceslib/microsoft/AzureSpeechClient/client' {
     export class AzureSpeechClient {
             /**
                  * @constructor
-                 * @param {string} subscriptionKey Your Bing Speech subscription key.
+                 * @param {string} subscriptionKey Your AZURE Speech subscription key.
                 */
-            constructor(subscriptionKey: string);
+            constructor(config: any);
             /**
                 * @deprecated Use the recognizeStream function instead. Will be removed in 2.x
                 */

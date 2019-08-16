@@ -10,7 +10,7 @@ const record = require('node-record-lpcm16');
 // const configFile = root + '/data/config.json';
 // const config: any = require(configFile);
 
-export default class BingSpeechApiController extends ASRController {
+export default class AzureSpeechApiController extends ASRController {
 
     public client: AzureSpeechClient;
 
@@ -19,7 +19,7 @@ export default class BingSpeechApiController extends ASRController {
     constructor(config: any) {
         super();
         this._config = config;
-        this.client = new AzureSpeechClient(config.Microsoft.AzureSpeechSubscriptionKey);
+        this.client = new AzureSpeechClient(config);
     }
 
     set config(config: any) {
@@ -47,7 +47,7 @@ export default class BingSpeechApiController extends ASRController {
         if (options && options.recordDuration) {
             recordDuration = options.recordDuration;
         }
-        //console.log(`BingSpeechApiController: RecognizerStart:`);
+        //console.log(`AzureSpeechApiController: RecognizerStart:`);
         let token = new AsyncToken<string>();
         token.complete = new Promise<string>((resolve: any, reject: any) => {
             process.nextTick(() => { token.emit('Listening'); });
