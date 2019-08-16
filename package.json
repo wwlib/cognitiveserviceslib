@@ -1,6 +1,6 @@
 {
   "name": "cognitiveserviceslib",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A library for connecting to cognitive services like Azure, LUIS, etc.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
