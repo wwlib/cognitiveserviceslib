@@ -1,3 +1,7 @@
+/*
+ * Based on: https://www.npmjs.com/package/bingspeech-api-client
+ */
+
 import * as needle from 'needle';
 import * as stream from 'stream';
 import * as querystring from 'querystring';
@@ -42,10 +46,6 @@ const VOICES: { [key: string]: string } = {
     'nl-nl female': 'Microsoft Server Speech Text to Speech Voice (nl-NL, HannaRUS)'
 };
 
-// Official docs
-// STT https://www.microsoft.com/cognitive-services/en-us/speech-api/documentation/API-Reference-REST/BingVoiceRecognition
-// TTS https://www.microsoft.com/cognitive-services/en-us/speech-api/documentation/api-reference-rest/bingvoiceoutput
-
 export class AzureSpeechClient {
     private AZURE_SPEECH_TOKEN_ENDPOINT = 'https://azurespeechserviceeast.cognitiveservices.azure.com/sts/v1.0/issuetoken';
     private AZURE_SPEECH_ENDPOINT_STT = 'https://eastus.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1';
@@ -87,12 +87,10 @@ export class AzureSpeechClient {
     }
 
     recognizeStream(input: NodeJS.ReadWriteStream, locale: string = 'en-us'): Promise<VoiceRecognitionResponse> {
-        // see also https://nowayshecodes.com/2016/02/12/speech-to-text-with-project-oxford-using-node-js/
         // TODO make locale and content-type configurable
         return this.issueToken()
             .then((token) => {
                 // Access token expires every 10 minutes. Renew it every 9 minutes only.
-                // see also http://oxfordportal.blob.core.windows.net/speech/doc/recognition/Program.cs
                 this.token = token;
                 this.tokenExpirationDate = Date.now() + 9 * 60 * 1000;
 
@@ -132,36 +130,10 @@ export class AzureSpeechClient {
             });
     }
 
-    /**
-     * * @deprecated Use the synthesizeStream function instead. Will be removed in 2.x
-     */
-    synthesize(text: string, locale: string = 'en-us', gender: string = 'female'): Promise<VoiceSynthesisResponse> {
-        return this.synthesizeStream(text, locale, gender)
-            .then(waveStream => {
-                return new Promise<VoiceSynthesisResponse>((resolve, reject) => {
-                    let buffers: any[] = [];
-                    waveStream.on('data', (buffer: any) => buffers.push(buffer));
-                    waveStream.on('end', () => {
-                        let wave = Buffer.concat(buffers);
-                        let response: VoiceSynthesisResponse = {
-                            wave: wave
-                        };
-                        resolve(response);
-                    });
-                    waveStream.on('error', (err: Error) => reject(err));
-                });
-            })
-            .catch((err: Error) => {
-                throw new Error(`cognitiveserviceslib: Voice synthesis failed: ${err.message}`);
-            });
-    }
-
     synthesizeStream(text: string, locale: string = 'en-us', gender: string = 'female'): Promise<NodeJS.ReadableStream> {
-        // see also https://github.com/Microsoft/Cognitive-Speech-TTS/blob/master/Samples-Http/NodeJS/TTSService.js
         return this.issueToken()
             .then((token) => {
                 // Access token expires every 10 minutes. Renew it every 9 minutes only.
-                // see also http://oxfordportal.blob.core.windows.net/speech/doc/recognition/Program.cs
                 this.token = token;
                 this.tokenExpirationDate = Date.now() + 9 * 60 * 1000;
 
@@ -206,7 +178,7 @@ export class AzureSpeechClient {
             return Promise.resolve(this.token);
         }
 
-        console.log('issue new token for subscription key %s', this.subscriptionKey);
+        // console.log('issue new token for subscription key %s', this.subscriptionKey);
 
         let options = {
             headers: {
@@ -239,7 +211,6 @@ export class AzureSpeechClient {
 
 /**
  * Get the appropriate voice font
- * see https://www.microsoft.com/cognitive-services/en-us/Speech-api/documentation/API-Reference-REST/BingVoiceOutput#SupLocales
  */
 function voiceFont(locale: string, gender: string): string {
     let voiceKey = (locale + ' ' + gender).toLowerCase();

@@ -3,6 +3,7 @@ import AsyncToken from './AsyncToken';
 export type NLUIntentAndEntities = {
     intent: string;
     entities: any;
+    response: any;
 }
 
 export type NLURequestOptions = {

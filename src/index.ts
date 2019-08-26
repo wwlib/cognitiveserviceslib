@@ -2,11 +2,11 @@ import LUISController, { LUISResponse, LUISEntity, LUISIntent } from './microsof
 import { AzureSpeechClient, VoiceRecognitionResponse, VoiceSynthesisResponse } from './microsoft/AzureSpeechClient'
 import AzureSpeechApiController from './microsoft/AzureSpeechApiController';
 import AzureTTSController from './microsoft/AzureTTSController';
-import ASRController from './ASRController';
+import ASRController, { ASRResponse } from './ASRController';
 import AsyncToken from './AsyncToken';
 import HotwordController, { HotwordResult } from './HotwordController';
 import NLUController, { NLUIntentAndEntities, NLURequestOptions, NLULanguageCode } from './NLUController';
-import TTSController from './TTSController';
+import TTSController, { TTSResponse } from './TTSController';
 
 export {
     LUISController,
@@ -19,6 +19,7 @@ export {
     AzureSpeechApiController,
     AzureTTSController,
     ASRController,
+    ASRResponse,
     AsyncToken,
     HotwordController,
     HotwordResult,
@@ -26,5 +27,6 @@ export {
     NLUIntentAndEntities,
     NLURequestOptions,
     NLULanguageCode,
-    TTSController    
+    TTSController,
+    TTSResponse 
 }

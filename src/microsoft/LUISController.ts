@@ -4,13 +4,6 @@ import AsyncToken from '../AsyncToken';
 const request = require('request');
 const querystring = require('querystring');
 
-// const findRoot = require('find-root');
-// const fs = require('fs');
-
-// const root = findRoot(__dirname);
-// const configFile = root + '/data/config.json';
-// const configData: any = require(configFile);
-
 export type LUISIntent = {
     intent: string;
     score: number;
@@ -35,9 +28,9 @@ export type LUISResponse = {
 
 export default class LUISController extends NLUController {
 
-    public endpoint: string = ''; //config.luis.endpoint;
-    public luisAppId: string = ''; //config.luis.appId;
-    public subscriptionKey: string = ''; //config.luis.subscriptionKey;
+    public endpoint: string = '';
+    public luisAppId: string = '';
+    public subscriptionKey: string = '';
 
     private _config: any = {};
 
@@ -61,7 +54,6 @@ export default class LUISController extends NLUController {
      }
 
     call(query: string): Promise<any> {
-        // console.log(`LUISController: ${query}`);
         let endpoint = this.endpoint;
         let luisAppId = this.luisAppId;
         let queryParams = {
@@ -80,7 +72,6 @@ export default class LUISController extends NLUController {
                         console.log(`LUISController: call: error:`, response, error);
                         reject(error);
                     } else {
-                        console.log(`LUISController: call:`, body, error);
                         let body_obj: any = JSON.parse(body);
                         resolve(body_obj);
                     }
@@ -121,12 +112,14 @@ export default class LUISController extends NLUController {
                 .then((response: LUISResponse) => {
                     let intentAndEntities: NLUIntentAndEntities = {
                         intent: '',
-                        entities: undefined
+                        entities: undefined,
+                        response: undefined
                     }
                     if (response && response.topScoringIntent) {
                         intentAndEntities = {
                             intent: response.topScoringIntent.intent,
-                            entities: this.getEntitiesWithResponse(response)
+                            entities: this.getEntitiesWithResponse(response),
+                            response: response
                         }
                     }
                     resolve(intentAndEntities);

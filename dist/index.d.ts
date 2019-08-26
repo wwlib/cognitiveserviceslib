@@ -7,12 +7,12 @@ declare module 'cognitiveserviceslib' {
     import { AzureSpeechClient, VoiceRecognitionResponse, VoiceSynthesisResponse } from 'cognitiveserviceslib/microsoft/AzureSpeechClient';
     import AzureSpeechApiController from 'cognitiveserviceslib/microsoft/AzureSpeechApiController';
     import AzureTTSController from 'cognitiveserviceslib/microsoft/AzureTTSController';
-    import ASRController from 'cognitiveserviceslib/ASRController';
+    import ASRController, { ASRResponse } from 'cognitiveserviceslib/ASRController';
     import AsyncToken from 'cognitiveserviceslib/AsyncToken';
     import HotwordController, { HotwordResult } from 'cognitiveserviceslib/HotwordController';
     import NLUController, { NLUIntentAndEntities, NLURequestOptions, NLULanguageCode } from 'cognitiveserviceslib/NLUController';
-    import TTSController from 'cognitiveserviceslib/TTSController';
-    export { LUISController, LUISResponse, LUISEntity, LUISIntent, AzureSpeechClient, VoiceRecognitionResponse, VoiceSynthesisResponse, AzureSpeechApiController, AzureTTSController, ASRController, AsyncToken, HotwordController, HotwordResult, NLUController, NLUIntentAndEntities, NLURequestOptions, NLULanguageCode, TTSController };
+    import TTSController, { TTSResponse } from 'cognitiveserviceslib/TTSController';
+    export { LUISController, LUISResponse, LUISEntity, LUISIntent, AzureSpeechClient, VoiceRecognitionResponse, VoiceSynthesisResponse, AzureSpeechApiController, AzureTTSController, ASRController, ASRResponse, AsyncToken, HotwordController, HotwordResult, NLUController, NLUIntentAndEntities, NLURequestOptions, NLULanguageCode, TTSController, TTSResponse };
 }
 
 declare module 'cognitiveserviceslib/microsoft/LUISController' {
@@ -59,20 +59,20 @@ declare module 'cognitiveserviceslib/microsoft/AzureSpeechClient' {
 
 declare module 'cognitiveserviceslib/microsoft/AzureSpeechApiController' {
     import { AzureSpeechClient } from 'cognitiveserviceslib/microsoft/AzureSpeechClient';
-    import ASRController from 'cognitiveserviceslib/ASRController';
+    import ASRController, { ASRResponse } from 'cognitiveserviceslib/ASRController';
     import AsyncToken from 'cognitiveserviceslib/AsyncToken';
     export default class AzureSpeechApiController extends ASRController {
         client: AzureSpeechClient;
         constructor(config: any);
         config: any;
-        RecognizeWaveBuffer(wave: Buffer): AsyncToken<string>;
-        RecognizerStart(options: any): AsyncToken<string>;
+        RecognizeWaveBuffer(wave: Buffer): AsyncToken<ASRResponse>;
+        RecognizerStart(options: any): AsyncToken<ASRResponse>;
     }
 }
 
 declare module 'cognitiveserviceslib/microsoft/AzureTTSController' {
     import { AzureSpeechClient } from 'cognitiveserviceslib/microsoft/AzureSpeechClient';
-    import TTSController from 'cognitiveserviceslib/TTSController';
+    import TTSController, { TTSOptions, TTSResponse } from 'cognitiveserviceslib/TTSController';
     import AsyncToken from 'cognitiveserviceslib/AsyncToken';
     export default class AzureTTSController extends TTSController {
         audioContext: AudioContext;
@@ -80,14 +80,18 @@ declare module 'cognitiveserviceslib/microsoft/AzureTTSController' {
         client: AzureSpeechClient;
         constructor(config: any, audioContext: AudioContext);
         config: any;
-        SynthesizerStart(text: string, options?: any): AsyncToken<string>;
+        SynthesizerStart(text: string, options?: TTSOptions): AsyncToken<TTSResponse>;
     }
 }
 
 declare module 'cognitiveserviceslib/ASRController' {
     import AsyncToken from 'cognitiveserviceslib/AsyncToken';
+    export type ASRResponse = {
+        utterance: string;
+        response: any;
+    };
     export default abstract class ASRController {
-        abstract RecognizerStart(options?: any): AsyncToken<string>;
+        abstract RecognizerStart(options?: any): AsyncToken<ASRResponse>;
     }
 }
 
@@ -116,6 +120,7 @@ declare module 'cognitiveserviceslib/NLUController' {
     export type NLUIntentAndEntities = {
         intent: string;
         entities: any;
+        response: any;
     };
     export type NLURequestOptions = {
         languageCode?: string;
@@ -136,13 +141,20 @@ declare module 'cognitiveserviceslib/NLUController' {
 
 declare module 'cognitiveserviceslib/TTSController' {
     import AsyncToken from 'cognitiveserviceslib/AsyncToken';
+    export type TTSResponse = {
+        text: string;
+        buffer: Buffer | undefined;
+    };
+    export type TTSOptions = {
+        autoPlay?: boolean;
+    };
     export default abstract class TTSController {
-        abstract SynthesizerStart(text: string, options?: any): AsyncToken<string>;
+        abstract SynthesizerStart(text: string, options?: TTSOptions): AsyncToken<TTSResponse>;
     }
 }
 
 declare module 'cognitiveserviceslib/microsoft/AzureSpeechClient/client' {
-    import { VoiceRecognitionResponse, VoiceSynthesisResponse } from 'cognitiveserviceslib/microsoft/AzureSpeechClient/models';
+    import { VoiceRecognitionResponse } from 'cognitiveserviceslib/microsoft/AzureSpeechClient/models';
     export class AzureSpeechClient {
             /**
                  * @constructor
@@ -154,10 +166,6 @@ declare module 'cognitiveserviceslib/microsoft/AzureSpeechClient/client' {
                 */
             recognize(wave: Buffer, locale?: string): Promise<VoiceRecognitionResponse>;
             recognizeStream(input: NodeJS.ReadWriteStream, locale?: string): Promise<VoiceRecognitionResponse>;
-            /**
-                * * @deprecated Use the synthesizeStream function instead. Will be removed in 2.x
-                */
-            synthesize(text: string, locale?: string, gender?: string): Promise<VoiceSynthesisResponse>;
             synthesizeStream(text: string, locale?: string, gender?: string): Promise<NodeJS.ReadableStream>;
             issueToken(): Promise<string>;
     }

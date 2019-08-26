@@ -1,14 +1,9 @@
 
 import { AzureSpeechClient, VoiceRecognitionResponse } from './AzureSpeechClient';
-import ASRController from '../ASRController';
+import ASRController, { ASRResponse } from '../ASRController';
 import AsyncToken from '../AsyncToken';
-// const findRoot = require('find-root');
 const fs = require('fs');
 const record = require('node-record-lpcm16');
-
-// const root = findRoot(__dirname);
-// const configFile = root + '/data/config.json';
-// const config: any = require(configFile);
 
 export default class AzureSpeechApiController extends ASRController {
 
@@ -26,35 +21,32 @@ export default class AzureSpeechApiController extends ASRController {
         this._config = config;
     }
 
-    RecognizeWaveBuffer(wave: Buffer): AsyncToken<string> {
-        let token = new AsyncToken<string>();
-        token.complete = new Promise<string>((resolve: any, reject: any) => {
+    RecognizeWaveBuffer(wave: Buffer): AsyncToken<ASRResponse> {
+        let token = new AsyncToken<ASRResponse>();
+        token.complete = new Promise<ASRResponse>((resolve: any, reject: any) => {
             this.client.recognize(wave).then((response: VoiceRecognitionResponse) => {
                 //console.log(response);
                 token.emit('RecognitionEndedEvent');
-                let result: string = '';
+                let utterance: string = '';
                 if (response && response.NBest && response.NBest[0] && response.NBest[0].Lexical) {
-                    result = response.NBest[0].Lexical;
+                    utterance = response.NBest[0].Lexical;
                 }
-                resolve(result);
+                resolve({utterance: utterance, response: response});
             });
         });
         return token;
     }
 
-    RecognizerStart(options: any): AsyncToken<string> {
+    RecognizerStart(options: any): AsyncToken<ASRResponse> {
         let recordDuration = 6000;
         if (options && options.recordDuration) {
             recordDuration = options.recordDuration;
         }
         //console.log(`AzureSpeechApiController: RecognizerStart:`);
-        let token = new AsyncToken<string>();
-        token.complete = new Promise<string>((resolve: any, reject: any) => {
+        let token = new AsyncToken<ASRResponse>();
+        token.complete = new Promise<ASRResponse>((resolve: any, reject: any) => {
             process.nextTick(() => { token.emit('Listening'); });
             try {
-
-
-                
                 let liveStream = record
                     .start({
                         sampleRateHertz: 16000,
@@ -73,17 +65,14 @@ export default class AzureSpeechApiController extends ASRController {
                 }, recordDuration);
 
                 this.client.recognizeStream(liveStream).then((response: VoiceRecognitionResponse) => {
-                    console.log(`response:`, response);
                     token.emit('RecognitionEndedEvent');
-                    let result: string = '';
+                    let utterance: string = '';
                     if (response && response.NBest && response.NBest[0] && response.NBest[0].Lexical) {
-                        result = response.NBest[0].Lexical;
+                        utterance = response.NBest[0].Lexical;
                     }
-                    resolve(result);
+                    resolve({utterance: utterance, response: response});
                 });
             } catch (error) {
-                console.log(this._config.Microsoft.AzureSpeechSubscriptionKey);
-                console.log(this._config.Microsoft);
                 console.log(error);
             }
         });

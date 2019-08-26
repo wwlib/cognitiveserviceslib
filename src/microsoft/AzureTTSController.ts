@@ -1,13 +1,8 @@
 
 import { AzureSpeechClient } from './AzureSpeechClient';
-import TTSController from '../TTSController';
+import TTSController, { TTSOptions, TTSResponse } from '../TTSController';
 import AsyncToken from '../AsyncToken';
-// const findRoot = require('find-root');
 const fs = require('fs');
-
-// const root = findRoot(__dirname);
-// const configFile = root + '/data/config.json';
-// const config: any = require(configFile);
 
 export default class AzureTTSController extends TTSController {
 
@@ -34,15 +29,14 @@ export default class AzureTTSController extends TTSController {
         this._config = config;
     }
 
-    SynthesizerStart(text: string, options?: any): AsyncToken<string> {
-        //console.log(`AzureTTSController: SynthesizerStart: ${text}`);
-        let token = new AsyncToken<string>();
-        token.complete = new Promise<string>((resolve: any, reject: any) => {
+    SynthesizerStart(text: string, options?: TTSOptions): AsyncToken<TTSResponse> {
+        let token = new AsyncToken<TTSResponse>();
+        token.complete = new Promise<TTSResponse>((resolve: any, reject: any) => {
             process.nextTick(() => { token.emit('Synthesizing'); });
 
             let file = fs.createWriteStream('tts-out.wav');
-            this.client.synthesizeStream(text).then((audioStream: any) => {
-                token.emit('SynthesisEndedEvent');
+            this.client.synthesizeStream(text).then((audioStream: NodeJS.ReadableStream) => {
+                token.emit('SynthesisStreamStartedEvent');
                 audioStream.pipe(file);
 
                 let buffers: any[] = [];
@@ -50,11 +44,12 @@ export default class AzureTTSController extends TTSController {
                     buffers.push(chunk);
                 });
                 audioStream.on('end', () => {
-                    // console.log('audioStream end');
-                    if (this.audioContext) {
-                        if (buffers && buffers.length > 0) {
-                            let audioStreamBuffer = Buffer.concat(buffers);
-                            let audioData = new Uint8Array(audioStreamBuffer).buffer;
+                    token.emit('SynthesisStreamEndedEvent');
+                    let audioStreamBuffer: Buffer | undefined = undefined;
+                    if (buffers && buffers.length > 0) {
+                        audioStreamBuffer = Buffer.concat(buffers);
+                        let audioData = new Uint8Array(audioStreamBuffer).buffer;
+                        if (options && options.autoPlay && this.audioContext) {
                             this.audioContext.decodeAudioData(audioData, (buffer: any) => {
                                 let decodedBuffer = buffer;
                                 let bufferSource = this.audioContext.createBufferSource();
@@ -66,7 +61,7 @@ export default class AzureTTSController extends TTSController {
                             });
                         }
                     }
-                    resolve(text);
+                    resolve({text: text, buffer: audioStreamBuffer});
                 });
             });
         });
