@@ -14,7 +14,7 @@
     "url": "git+ssh://git@github.com:wwlib/cognitiveserviceslib.git"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "needle": "^2.4.0",
     "node-record-lpcm16": "^0.3.0",
     "request": "^2.88.0",
