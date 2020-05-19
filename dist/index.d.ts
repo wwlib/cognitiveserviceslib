@@ -99,7 +99,10 @@ declare module 'cognitiveserviceslib/AsyncToken' {
     import { EventEmitter } from 'events';
     export default class AsyncToken<T> extends EventEmitter {
         complete: Promise<T> | undefined;
+        resolve: any;
+        reject: any;
         constructor();
+        dispose(): void;
     }
 }
 
@@ -112,6 +115,8 @@ declare module 'cognitiveserviceslib/HotwordController' {
     };
     export default abstract class HotwordController {
         abstract RecognizerStart(options?: any): AsyncToken<HotwordResult>;
+        abstract force(): void;
+        abstract dispose(): void;
     }
 }
 
