@@ -31,8 +31,11 @@ export default class AzureSpeechApiController extends ASRController {
                 if (response && response.NBest && response.NBest[0] && response.NBest[0].Lexical) {
                     utterance = response.NBest[0].Lexical;
                 }
-                resolve({utterance: utterance, response: response});
-            });
+                resolve({ utterance: utterance, response: response });
+            })
+                .catch((error) => {
+                    resolve({ utterance: '', response: '', error: error });
+                });
         });
         return token;
     }
@@ -70,8 +73,11 @@ export default class AzureSpeechApiController extends ASRController {
                     if (response && response.NBest && response.NBest[0] && response.NBest[0].Lexical) {
                         utterance = response.NBest[0].Lexical;
                     }
-                    resolve({utterance: utterance, response: response});
-                });
+                    resolve({ utterance: utterance, response: response });
+                })
+                    .catch((error) => {
+                        resolve({ utterance: '', response: '', error: error });
+                    });
             } catch (error) {
                 console.log(error);
             }

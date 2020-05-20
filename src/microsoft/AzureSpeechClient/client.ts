@@ -126,7 +126,7 @@ export class AzureSpeechClient {
                 });
             })
             .catch((err: Error) => {
-                throw new Error(`cognitiveserviceslib: Voice recognition failed : ${err.message}`);
+                throw new Error(`cognitiveserviceslib: recognizeStream: error: ${err.message}`);
             });
     }
 
@@ -168,7 +168,7 @@ export class AzureSpeechClient {
                 return needle.post(this.AZURE_SPEECH_ENDPOINT_TTS, ssml, options);
             })
             .catch((err: Error) => {
-                throw new Error(`cognitiveserviceslib: Voice synthesis failed: ${err.message}`);
+                throw new Error(`cognitiveserviceslib: synthesizeStream: error: ${err.message}`);
             });
     }
 
