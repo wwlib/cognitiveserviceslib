@@ -174,7 +174,7 @@ export class AzureSpeechClient {
 
     public issueToken(): Promise<string> {
         if (this.token && this.tokenExpirationDate > Date.now()) {
-            console.log('reusing existing token');
+            // console.log('reusing existing token');
             return Promise.resolve(this.token);
         }
 

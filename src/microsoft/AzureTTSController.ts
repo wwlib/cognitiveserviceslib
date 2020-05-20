@@ -65,7 +65,7 @@ export default class AzureTTSController extends TTSController {
                 });
             })
             .catch((error) => {
-                resolve({ text: text, buffer: undefined, error: error });
+                reject(error);
             });
         });
         return token;

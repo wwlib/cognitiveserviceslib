@@ -69,7 +69,7 @@ export default class LUISController extends NLUController {
             request(luisRequest,
                 ((error: string, response: any, body: any) => {
                     if (error) {
-                        console.log(`LUISController: call: error:`, response, error);
+                        // console.log(`LUISController: call: error:`, response, error);
                         reject(error);
                     } else {
                         let body_obj: any = JSON.parse(body);

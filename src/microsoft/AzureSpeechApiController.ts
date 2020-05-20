@@ -34,7 +34,7 @@ export default class AzureSpeechApiController extends ASRController {
                 resolve({ utterance: utterance, response: response });
             })
                 .catch((error) => {
-                    resolve({ utterance: '', response: '', error: error });
+                    reject(error);
                 });
         });
         return token;
@@ -57,7 +57,7 @@ export default class AzureSpeechApiController extends ASRController {
                         recordProgram: 'rec'
                     })
                     .on('error', (error: any) => {
-                        console.log(error);
+                        // console.log(error);
                         reject(error);
                     });
 
@@ -76,10 +76,11 @@ export default class AzureSpeechApiController extends ASRController {
                     resolve({ utterance: utterance, response: response });
                 })
                     .catch((error) => {
-                        resolve({ utterance: '', response: '', error: error });
+                        reject(error);
                     });
             } catch (error) {
-                console.log(error);
+                // console.log(error);
+                reject(error);
             }
         });
         return token;
