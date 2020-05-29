@@ -2,24 +2,20 @@
 import { AzureSpeechClient, VoiceRecognitionResponse } from './AzureSpeechClient';
 import ASRController, { ASRResponse } from '../ASRController';
 import AsyncToken from '../AsyncToken';
-const fs = require('fs');
+// const fs = require('fs');
 const record = require('node-record-lpcm16');
 
 export default class AzureSpeechApiController extends ASRController {
 
     public client: AzureSpeechClient;
 
-    private _config: any = {};
-
     constructor(config: any) {
         super();
-        this._config = config;
         this.client = new AzureSpeechClient(config);
     }
 
-    set config(config: any) {
-        this._config = config;
-    }
+    // set config(config: any) {
+    // }
 
     RecognizeWaveBuffer(wave: Buffer): AsyncToken<ASRResponse> {
         let token = new AsyncToken<ASRResponse>();

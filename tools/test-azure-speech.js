@@ -1,4 +1,4 @@
-const { AzureSpeechApiController } = require('../dist');
+const { AzureSpeechApiController } = require('../lib');
 const config = require('./config.json');
 
 azureSpeechApiController = new AzureSpeechApiController(config);

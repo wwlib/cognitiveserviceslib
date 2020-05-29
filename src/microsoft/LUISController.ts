@@ -34,24 +34,21 @@ export default class LUISController extends NLUController {
 
     private _config: any = {};
 
-    /**
-     * @constructor
-     */
-     constructor(config: any) {
-         super();
-         this.config = config;
-     }
+    constructor(config: any) {
+        super();
+        this.config = config;
+    }
 
-     set config(config: any) {
-         if (config && config.Microsoft && config.Microsoft.nluLUIS_endpoint && config.Microsoft.nluLUIS_appId && config.Microsoft.nluLUIS_subscriptionKey) {
-             this._config = config;
-             this.endpoint = this._config.Microsoft.nluLUIS_endpoint;
-             this.luisAppId = this._config.Microsoft.nluLUIS_appId;
-             this.subscriptionKey = this._config.Microsoft.nluLUIS_subscriptionKey;
-         } else {
-             console.log(`LUISController: set config: error: incomplete config:`, config);
-         }
-     }
+    set config(config: any) {
+        if (config && config.Microsoft && (config.Microsoft.nluLUIS_endpoint || config.Microsoft.LuisEndpoint) && (config.Microsoft.nluLUIS_appId || config.Microsoft.LuisAppId) && (config.Microsoft.nluLUIS_subscriptionKey || config.Microsoft.LuisSubscriptionKey)) {
+            this._config = config;
+            this.endpoint = this._config.Microsoft.nluLUIS_endpoint || config.Microsoft.LuisEndpoint;
+            this.luisAppId = this._config.Microsoft.nluLUIS_appId || config.Microsoft.LuisAppId;
+            this.subscriptionKey = this._config.Microsoft.nluLUIS_subscriptionKey || config.Microsoft.LuisSubscriptionKey;
+        } else {
+            console.log(`LUISController: set config: error: incomplete config:`, config);
+        }
+    }
 
     call(query: string): Promise<any> {
         let endpoint = this.endpoint;
@@ -99,7 +96,7 @@ export default class LUISController extends NLUController {
 
     getIntentAndEntities(utterance: string, options?: NLURequestOptions): AsyncToken<NLUIntentAndEntities> {
         options = options || {};
-        let defaultOptions: NLURequestOptions =  {
+        let defaultOptions: NLURequestOptions = {
             languageCode: NLULanguageCode.en_US,
             contexts: undefined,
             sessionId: undefined
