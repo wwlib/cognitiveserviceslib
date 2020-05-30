@@ -18,7 +18,7 @@ import WaveFileAudioSource, { WaveFileAudioSourceOptions } from './audio/WaveFil
 import MicrophoneAudioSource, { MicrophoneAudioSourceOptions } from './audio/MicrophoneAudioSource';
 import Resampler from './audio/Resampler';
 import WaveHeader from './audio/WaveHeader';
-import CognitiveServicesConfig from './CognitiveServicesConfig';
+import CognitiveServicesConfig, { CognitiveServicesConfigOptions } from './CognitiveServicesConfig';
 
 export {
     LUISController,
@@ -53,5 +53,6 @@ export {
     MicrophoneAudioSourceOptions,
     Resampler,
     WaveHeader,
-    CognitiveServicesConfig
+    CognitiveServicesConfig,
+    CognitiveServicesConfigOptions
 }
