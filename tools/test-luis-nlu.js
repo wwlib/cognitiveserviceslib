@@ -1,4 +1,4 @@
-const { LUISController } = require('../dist');
+const { LUISController } = require('../lib');
 const config = require('./config.json');
 
 luisController = new LUISController(config);

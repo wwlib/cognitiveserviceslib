@@ -4,9 +4,31 @@ A library for connecting to cognitive services like Azure, LUIS, etc.
 
 Based on: https://www.npmjs.com/package/bingspeech-api-client
 
-#### installation
+#### installation - package.json
 
-yarn add cognitiveserviceslib
+```
+"dependencies": {
+    ...
+    "cognitiveserviceslib": "wwlib/cognitiveserviceslib#v0.0.6",
+    ...
+}
+```
+
+### development
+
+Prerequisites:
+
+```
+brew install sox
+```
+
+```
+npm install
+npm run build
+cd tools
+node test-azure-speech.js
+...
+```
 
 #### reference
 - https://webpack.js.org/guides/typescript/

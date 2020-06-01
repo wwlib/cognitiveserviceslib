@@ -6,7 +6,7 @@ import * as needle from 'needle';
 import * as stream from 'stream';
 import * as querystring from 'querystring';
 
-import { VoiceRecognitionResponse, VoiceSynthesisResponse } from './models';
+import { VoiceRecognitionResponse } from './models';
 
 const ASIAN_LOCALES = ['zh-cn', 'zh-hk', 'zh-tw', 'ja-jp'];
 
@@ -59,7 +59,7 @@ export class AzureSpeechClient {
     /**
      * Supported: raw-8khz-8bit-mono-mulaw, raw-16khz-16bit-mono-pcm, riff-8khz-8bit-mono-mulaw, riff-16khz-16bit-mono-pcm
      */
-    private AUDIO_OUTPUT_FORMAT = 'riff-8khz-8bit-mono-mulaw';
+    private AUDIO_OUTPUT_FORMAT = 'riff-16khz-16bit-mono-pcm';
 
     /**
       * @constructor
@@ -69,7 +69,7 @@ export class AzureSpeechClient {
         if (config && config.Microsoft && config.Microsoft.AzureSpeechSubscriptionKey) {
             this.subscriptionKey = config.Microsoft.AzureSpeechSubscriptionKey;
             if (config.Microsoft.AzureSpeechTokenEndpoint) this.AZURE_SPEECH_TOKEN_ENDPOINT = config.Microsoft.AzureSpeechTokenEndpoint;
-            if (config.Microsoft.AzureSpeechEndpointStt) this.AZURE_SPEECH_ENDPOINT_STT = config.Microsoft.AzureSpeechEndpointStt;
+            if (config.Microsoft.AzureSpeechEndpointStt || config.Microsoft.AzureSpeechEndpointAsr) this.AZURE_SPEECH_ENDPOINT_STT = config.Microsoft.AzureSpeechEndpointStt || config.Microsoft.AzureSpeechEndpointAsr;
             if (config.Microsoft.AzureSpeechEndpointTts) this.AZURE_SPEECH_ENDPOINT_TTS = config.Microsoft.AzureSpeechEndpointTts;
         } else {
             console.log(`AzureSpeechClient: config: error: incomplete config:`, config);
@@ -130,7 +130,7 @@ export class AzureSpeechClient {
             });
     }
 
-    synthesizeStream(text: string, locale: string = 'en-us', gender: string = 'female'): Promise<NodeJS.ReadableStream> {
+    synthesizeStream(text: string, format: string = this.AUDIO_OUTPUT_FORMAT, locale: string = 'en-us', gender: string = 'female'): Promise<NodeJS.ReadableStream> {
         return this.issueToken()
             .then((token) => {
                 // Access token expires every 10 minutes. Renew it every 9 minutes only.
@@ -156,7 +156,7 @@ export class AzureSpeechClient {
                         'Authorization': `Bearer ${this.token}`,
                         'Content-Type': 'application/ssml+xml',
                         'Content-Length': ssml.length,
-                        'X-Microsoft-OutputFormat': this.AUDIO_OUTPUT_FORMAT,
+                        'X-Microsoft-OutputFormat': format,
                         'X-Search-AppId': '00000000000000000000000000000000',
                         'X-Search-ClientID': '00000000000000000000000000000000',
                         'User-Agent': 'cognitiveserviceslib'

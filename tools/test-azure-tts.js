@@ -1,4 +1,4 @@
-const { AzureTTSController } = require('../dist');
+const { AzureTTSController } = require('../lib');
 const config = require('./config.json');
 
 azureTTSController = new AzureTTSController(config);

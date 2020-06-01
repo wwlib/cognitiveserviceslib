@@ -10,12 +10,8 @@ export default class AzureTTSController extends TTSController {
     public masterVolumeGainNode: GainNode | undefined;
     public client: AzureSpeechClient;
 
-    private _config: any = {};
-
     constructor(config: any, audioContext: AudioContext) {
         super();
-        this._config = config;
-
         this.audioContext = audioContext;
         if (this.audioContext) {
             this.masterVolumeGainNode = this.audioContext.createGain();
@@ -25,9 +21,8 @@ export default class AzureTTSController extends TTSController {
         this.client = new AzureSpeechClient(config);
     }
 
-    set config(config: any) {
-        this._config = config;
-    }
+    // set config(config: any) {
+    // }
 
     SynthesizerStart(text: string, options?: TTSOptions): AsyncToken<TTSResponse> {
         let token = new AsyncToken<TTSResponse>();
