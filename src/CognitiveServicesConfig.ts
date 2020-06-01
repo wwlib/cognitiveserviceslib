@@ -35,7 +35,7 @@ export default class CognitiveServicesConfig extends EventEmitter {
   }
 
   init(options?: CognitiveServicesConfigOptions): void {
-    console.log(`CognitiveServicesConfig: init`, options);
+    // console.log(`CognitiveServicesConfig: init`, options);
     if (options) {
       this.initWithData(options);
     } else if (this.loadFromLocalStorage()) {
@@ -45,16 +45,13 @@ export default class CognitiveServicesConfig extends EventEmitter {
     }
   }
 
-  initWithData(options?: CognitiveServicesConfigOptions | any): void {
+  initWithData(options: CognitiveServicesConfigOptions | any = {}): void {
     console.log(`CognitiveServicesConfig: initWithData`, options);
-    if (options && options.Microsoft) {
+    if (options.Microsoft) {
       this.Microsoft = options.Microsoft;
     } else {
       this.Microsoft = defaultMicrosoftOptions;
     }
-
-    console.log(options, this.Microsoft);
-
     this._timestamp = options.timestamp || 0;
   }
 
