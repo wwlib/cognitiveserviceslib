@@ -68,21 +68,23 @@ export default class CognitiveServicesConfig extends EventEmitter {
   }
 
   loadFromLocalStorage(): boolean {
-    const localStorage = window.localStorage;
-    const settingsText: string | null = localStorage.getItem('settings');
-    // console.log(`loadFromLocalStorage: `, settingsText);
-    if (settingsText) {
-      try {
-        const settings = JSON.parse(settingsText);
-        this.initWithData(settings as CognitiveServicesConfigOptions);
-        return true
-      } catch (error) {
-        console.log(`loadFromLocalStorage`, error);
-        return false;
+    let result = false;
+    const localStorage = window ? window.localStorage : undefined;
+
+    if (localStorage) {
+      const settingsText: string | null = localStorage.getItem('settings');
+      // console.log(`loadFromLocalStorage: `, settingsText);
+      if (settingsText) {
+        try {
+          const settings = JSON.parse(settingsText);
+          this.initWithData(settings as CognitiveServicesConfigOptions);
+          result = true
+        } catch (error) {
+          console.log(`loadFromLocalStorage`, error);
+        }
       }
-    } else {
-      return false;
     }
+    return result;
   }
 
   get json(): any {
