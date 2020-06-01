@@ -72,7 +72,7 @@ export default class CognitiveServicesConfig extends EventEmitter {
     const localStorage = window ? window.localStorage : undefined;
 
     if (localStorage) {
-      const settingsText: string | null = localStorage.getItem('settings');
+      const settingsText: string | null = localStorage.getItem('cognitive-services-config');
       // console.log(`loadFromLocalStorage: `, settingsText);
       if (settingsText) {
         try {
