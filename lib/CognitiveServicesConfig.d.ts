@@ -13,6 +13,7 @@ export interface CognitiveServicesConfigOptions {
     Microsoft: MicrosoftOptions;
 }
 export default class CognitiveServicesConfig extends EventEmitter {
+    static LOCAL_STORAGE_ITEM_NAME: string;
     Microsoft: MicrosoftOptions;
     private _timestamp;
     constructor(options?: CognitiveServicesConfigOptions);
