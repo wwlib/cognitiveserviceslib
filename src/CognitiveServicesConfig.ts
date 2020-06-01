@@ -25,6 +25,8 @@ const defaultMicrosoftOptions: MicrosoftOptions = {
 
 export default class CognitiveServicesConfig extends EventEmitter {
 
+  static LOCAL_STORAGE_ITEM_NAME: string = 'cognitive-services-config';
+
   public Microsoft: MicrosoftOptions = defaultMicrosoftOptions;
 
   private _timestamp: number = 0;
@@ -59,7 +61,7 @@ export default class CognitiveServicesConfig extends EventEmitter {
     const localStorage = window.localStorage;
     try {
       const dataText = JSON.stringify(this.json);
-      localStorage.setItem('settings', dataText);
+      localStorage.setItem(CognitiveServicesConfig.LOCAL_STORAGE_ITEM_NAME, dataText);
       return true;
     } catch (error) {
       console.log(`saveToLocalStorage:`, error);
@@ -72,7 +74,7 @@ export default class CognitiveServicesConfig extends EventEmitter {
     const localStorage = window ? window.localStorage : undefined;
 
     if (localStorage) {
-      const settingsText: string | null = localStorage.getItem('cognitive-services-config');
+      const settingsText: string | null = localStorage.getItem(CognitiveServicesConfig.LOCAL_STORAGE_ITEM_NAME);
       // console.log(`loadFromLocalStorage: `, settingsText);
       if (settingsText) {
         try {
