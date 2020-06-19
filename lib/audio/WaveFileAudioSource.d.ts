@@ -14,6 +14,8 @@ export default class WaveFileAudioSource extends AudioSource {
     private _wav;
     private _interval;
     constructor(options: WaveFileAudioSourceOptions);
+    get wav(): any;
+    get samples(): any;
     start(): void;
     get audioData(): Int16Array | undefined;
     dispose(): void;

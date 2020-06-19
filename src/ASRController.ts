@@ -5,6 +5,11 @@ export type ASRResponse = {
     response: any;
 }
 
+export type ASROptions = {
+    recordDuration?: number;
+    locale?: string;
+}
+
 export default abstract class ASRController {
 
     abstract RecognizerStart(options?: any): AsyncToken<ASRResponse>;

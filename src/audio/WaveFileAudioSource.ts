@@ -38,6 +38,18 @@ export default class WaveFileAudioSource extends AudioSource {
     }
   }
 
+  get wav(): any {
+    return this._wav;
+  }
+
+  get samples(): any {
+    let samples: any;
+    if (this._wav && this._wav.data) {
+      samples = this._wav.data.samples;
+    }
+    return samples;
+  }
+
   start() {
     const packetDuration = 0.020;
     const packetMilliseconds = packetDuration * 1000;

@@ -1,5 +1,15 @@
 /// <reference types="node" />
 import { VoiceRecognitionResponse } from './models';
+export declare type AsrOptions = {
+    recordDuration?: number;
+    locale?: string;
+};
+export declare type TtsOptions = {
+    autoPlay?: boolean;
+    format?: string;
+    locale?: string;
+    gender?: string;
+};
 export declare class AzureSpeechClient {
     private AZURE_SPEECH_TOKEN_ENDPOINT;
     private AZURE_SPEECH_ENDPOINT_STT;
@@ -19,9 +29,9 @@ export declare class AzureSpeechClient {
     /**
      * @deprecated Use the recognizeStream function instead. Will be removed in 2.x
      */
-    recognize(wave: Buffer, locale?: string): Promise<VoiceRecognitionResponse>;
-    recognizeStream(input: NodeJS.ReadWriteStream, locale?: string): Promise<VoiceRecognitionResponse>;
-    synthesizeStream(text: string, format?: string, locale?: string, gender?: string): Promise<NodeJS.ReadableStream>;
+    recognize(wave: Buffer, options?: AsrOptions): Promise<VoiceRecognitionResponse>;
+    recognizeStream(input: NodeJS.ReadWriteStream, options?: AsrOptions): Promise<VoiceRecognitionResponse>;
+    synthesizeStream(text: string, options?: TtsOptions): Promise<NodeJS.ReadableStream>;
     issueToken(): Promise<string>;
     private convertToUnicode;
 }

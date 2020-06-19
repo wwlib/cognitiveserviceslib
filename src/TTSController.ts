@@ -7,6 +7,9 @@ export type TTSResponse = {
 
 export type TTSOptions = {
     autoPlay?: boolean;
+    format?: string;
+    locale?: string;
+    gender?: string;
 }
 
 

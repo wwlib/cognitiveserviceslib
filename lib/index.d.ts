@@ -1,5 +1,5 @@
 import LUISController, { LUISResponse, LUISEntity, LUISIntent } from './microsoft/LUISController';
-import { AzureSpeechClient, VoiceRecognitionResponse, VoiceSynthesisResponse } from './microsoft/AzureSpeechClient';
+import { AzureSpeechClient, VoiceRecognitionResponse, VoiceSynthesisResponse, AsrOptions, TtsOptions } from './microsoft/AzureSpeechClient';
 import AzureSpeechApiController from './microsoft/AzureSpeechApiController';
 import AzureTTSController from './microsoft/AzureTTSController';
 import ASRController, { ASRResponse } from './ASRController';
@@ -16,5 +16,5 @@ import WaveFileAudioSource, { WaveFileAudioSourceOptions } from './audio/WaveFil
 import MicrophoneAudioSource, { MicrophoneAudioSourceOptions } from './audio/MicrophoneAudioSource';
 import Resampler from './audio/Resampler';
 import WaveHeader from './audio/WaveHeader';
-import CognitiveServicesConfig, { CognitiveServicesConfigOptions } from './CognitiveServicesConfig';
-export { LUISController, LUISResponse, LUISEntity, LUISIntent, AzureSpeechClient, VoiceRecognitionResponse, VoiceSynthesisResponse, AzureSpeechApiController, AzureTTSController, ASRController, ASRResponse, AsyncToken, HotwordController, HotwordResult, NLUController, NLUIntentAndEntities, NLURequestOptions, NLULanguageCode, TTSController, TTSResponse, AudioContextAudioSink, AudioContextAudioSinkOptions, AudioSink, AudioSource, AudioSourceWaveStreamer, AudioUtils, WaveFileAudioSource, WaveFileAudioSourceOptions, MicrophoneAudioSource, MicrophoneAudioSourceOptions, Resampler, WaveHeader, CognitiveServicesConfig, CognitiveServicesConfigOptions };
+import CognitiveServicesConfig, { CognitiveServicesConfigOptions, MicrosoftOptions } from './CognitiveServicesConfig';
+export { LUISController, LUISResponse, LUISEntity, LUISIntent, AzureSpeechClient, VoiceRecognitionResponse, VoiceSynthesisResponse, AzureSpeechApiController, AsrOptions, TtsOptions, AzureTTSController, ASRController, ASRResponse, AsyncToken, HotwordController, HotwordResult, NLUController, NLUIntentAndEntities, NLURequestOptions, NLULanguageCode, TTSController, TTSResponse, AudioContextAudioSink, AudioContextAudioSinkOptions, AudioSink, AudioSource, AudioSourceWaveStreamer, AudioUtils, WaveFileAudioSource, WaveFileAudioSourceOptions, MicrophoneAudioSource, MicrophoneAudioSourceOptions, Resampler, WaveHeader, CognitiveServicesConfig, CognitiveServicesConfigOptions, MicrosoftOptions, };

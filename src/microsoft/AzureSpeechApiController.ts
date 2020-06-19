@@ -1,6 +1,6 @@
 
 import { AzureSpeechClient, VoiceRecognitionResponse } from './AzureSpeechClient';
-import ASRController, { ASRResponse } from '../ASRController';
+import ASRController, { ASRResponse, ASROptions } from '../ASRController';
 import AsyncToken from '../AsyncToken';
 // const fs = require('fs');
 const record = require('node-record-lpcm16');
@@ -17,10 +17,10 @@ export default class AzureSpeechApiController extends ASRController {
     // set config(config: any) {
     // }
 
-    RecognizeWaveBuffer(wave: Buffer): AsyncToken<ASRResponse> {
+    RecognizeWaveBuffer(wave: Buffer, options?: ASROptions): AsyncToken<ASRResponse> {
         let token = new AsyncToken<ASRResponse>();
         token.complete = new Promise<ASRResponse>((resolve: any, reject: any) => {
-            this.client.recognize(wave).then((response: VoiceRecognitionResponse) => {
+            this.client.recognize(wave, options).then((response: VoiceRecognitionResponse) => {
                 //console.log(response);
                 token.emit('RecognitionEndedEvent');
                 let utterance: string = '';
@@ -36,7 +36,7 @@ export default class AzureSpeechApiController extends ASRController {
         return token;
     }
 
-    RecognizerStart(options: any): AsyncToken<ASRResponse> {
+    RecognizerStart(options: ASROptions): AsyncToken<ASRResponse> {
         let recordDuration = 6000;
         if (options && options.recordDuration) {
             recordDuration = options.recordDuration;
@@ -63,7 +63,7 @@ export default class AzureSpeechApiController extends ASRController {
                     token.emit('Recording_Stopped');
                 }, recordDuration);
 
-                this.client.recognizeStream(liveStream).then((response: VoiceRecognitionResponse) => {
+                this.client.recognizeStream(liveStream, options).then((response: VoiceRecognitionResponse) => {
                     token.emit('RecognitionEndedEvent');
                     let utterance: string = '';
                     if (response && response.NBest && response.NBest[0] && response.NBest[0].Lexical) {
