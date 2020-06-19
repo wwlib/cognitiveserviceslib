@@ -30,7 +30,7 @@ export default class AzureTTSController extends TTSController {
             process.nextTick(() => { token.emit('Synthesizing'); });
 
             let file = fs.createWriteStream('tts-out.wav');
-            this.client.synthesizeStream(text).then((audioStream: NodeJS.ReadableStream) => {
+            this.client.synthesizeStream(text, options).then((audioStream: NodeJS.ReadableStream) => {
                 token.emit('SynthesisStreamStartedEvent');
                 audioStream.pipe(file);
 
