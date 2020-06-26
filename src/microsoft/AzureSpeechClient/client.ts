@@ -18,6 +18,7 @@ export type TtsOptions = {
     format?: string;
     locale?: string;
     gender?: string;
+    voiceName?: string;
 }
 
 const ASIAN_LOCALES = ['zh-cn', 'zh-hk', 'zh-tw', 'ja-jp'];
@@ -150,6 +151,7 @@ export class AzureSpeechClient {
         let format = this.AUDIO_OUTPUT_FORMAT;
         let locale = 'en-US';
         let gender = 'female';
+        let voiceName: string;
         if (options && options.format) {
             format = options.format;
         }
@@ -158,6 +160,9 @@ export class AzureSpeechClient {
         }
         if (options && options.gender) {
             gender = options.gender;
+        }
+        if (options && options.voiceName) {
+            voiceName = options.voiceName;
         }
         return this.issueToken()
             .then((token) => {
@@ -170,13 +175,13 @@ export class AzureSpeechClient {
                     text = this.convertToUnicode(text);
                 }
 
-                let font = voiceFont(locale, gender);
-                if (!font) {
-                    throw new Error(`No voice font for lang ${locale} and gender ${gender}`);
+                voiceName = voiceName || getVoiceName(locale, gender);
+                if (!voiceName) {
+                    throw new Error(`No voice name for lang ${locale} and gender ${gender}`);
                 }
 
                 let ssml = `<speak version='1.0' xml:lang='${locale}'>
-                            <voice name='${font}' xml:lang='${locale}' xml:gender='${gender}'>${text}</voice>
+                            <voice name='${voiceName}' xml:lang='${locale}' xml:gender='${gender}'>${text}</voice>
                             </speak>`;
 
                 let requestOptions = {
@@ -240,7 +245,7 @@ export class AzureSpeechClient {
 /**
  * Get the appropriate voice font
  */
-function voiceFont(locale: string, gender: string): string {
+function getVoiceName(locale: string, gender: string): string {
     let voiceKey = (locale + ' ' + gender); //.toLowerCase();
     return VOICES[voiceKey];
 }

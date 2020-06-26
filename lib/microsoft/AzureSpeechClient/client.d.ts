@@ -9,6 +9,7 @@ export declare type TtsOptions = {
     format?: string;
     locale?: string;
     gender?: string;
+    voiceName?: string;
 };
 export declare class AzureSpeechClient {
     private AZURE_SPEECH_TOKEN_ENDPOINT;
