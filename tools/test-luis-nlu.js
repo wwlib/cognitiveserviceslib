@@ -6,7 +6,7 @@ luisController = new LUISController(config);
 let timeLog = {
     timeStart: new Date().getTime(),
 }
-const token = luisController.getIntentAndEntities('what time is it');
+const token = luisController.getIntentAndEntities('why do you have only one eye');
 token.complete
     .then((intentAndEntities) => {
         timeLog.complete = new Date().getTime();

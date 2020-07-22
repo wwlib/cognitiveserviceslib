@@ -2,6 +2,7 @@ import AsyncToken from './AsyncToken';
 
 export type NLUIntentAndEntities = {
     intent: string;
+    intents: any;
     entities: any;
     response: any;
 }

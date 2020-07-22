@@ -136,14 +136,22 @@ export class AzureSpeechClient {
                             return reject(err);
                         }
                         if (res.statusCode !== 200) {
-                            return reject(new Error(`Wrong status code ${res.statusCode} in Azure Speech API / synthesize`));
+                            return reject({
+                                error: `Wrong status code ${res.statusCode} in Azure Speech API / recognize`,
+                                res: res,
+                                body: body,
+                            });
                         }
                         resolve(body);
                     });
                 });
             })
-            .catch((err: Error) => {
-                throw new Error(`cognitiveserviceslib: recognizeStream: error: ${err.message}`);
+            // .catch((err: Error) => {
+            //     throw new Error(`cognitiveserviceslib: recognizeStream: error: ${err.message}`);
+            // });
+            .catch((errorData) => {
+                // throw new Error(`cognitiveserviceslib: recognizeStream: error: ${err.message}`);
+                return Promise.reject(errorData);
             });
     }
 
@@ -228,7 +236,12 @@ export class AzureSpeechClient {
                     return reject(err);
                 }
                 if (res.statusCode !== 200) {
-                    return reject(new Error(`Wrong status code ${res.statusCode} in Azure Speech API / token`));
+                    // return reject(new Error(`Wrong status code ${res.statusCode} in Azure Speech API / token`));
+                    return reject({
+                        err,
+                        res,
+                        body
+                    });
                 }
                 resolve(body);
             });
