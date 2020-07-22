@@ -20,6 +20,10 @@ import Resampler from './audio/Resampler';
 import WaveHeader from './audio/WaveHeader';
 import CognitiveServicesConfig, { CognitiveServicesConfigOptions, MicrosoftOptions } from './CognitiveServicesConfig';
 
+import { ChatbotSession, ChatbotResponse, ChatbotStatus } from './ChatbotSession';
+import MockChatbotSession from './MockChatbotSession';
+import HealthBotSession from './microsoft/HealthBotSession';
+
 export {
     LUISController,
     LUISResponse,
@@ -58,4 +62,9 @@ export {
     CognitiveServicesConfig,
     CognitiveServicesConfigOptions,
     MicrosoftOptions,
+    ChatbotSession,
+    ChatbotResponse,
+    ChatbotStatus,
+    MockChatbotSession,
+    HealthBotSession,
 }

@@ -15,9 +15,9 @@ export declare type LUISEntity = {
 };
 export declare type LUISResponse = {
     query: string;
-    topScoringIntent: LUISIntent;
-    intents: LUISIntent[];
-    entities: LUISEntity[];
+    prediction: any;
+    intents: any;
+    entities: any;
 };
 export default class LUISController extends NLUController {
     endpoint: string;

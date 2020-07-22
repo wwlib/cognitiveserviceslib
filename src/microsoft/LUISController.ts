@@ -21,9 +21,9 @@ export type LUISEntity = {
 
 export type LUISResponse = {
     query: string;
-    topScoringIntent: LUISIntent;
-    intents: LUISIntent[];
-    entities: LUISEntity[];
+    prediction: any;
+    intents: any; //LUISIntent[];
+    entities: any; //LUISEntity[];
 }
 
 export default class LUISController extends NLUController {
@@ -50,6 +50,14 @@ export default class LUISController extends NLUController {
         }
     }
 
+    /*
+    https://westus.api.cognitive.microsoft.com/
+    luis/prediction/v3.0/apps/a9cb499e-1a9d-4183-b98d-e76c3f2b4100/slots/production/predict
+    ?subscription-key=9d2bf81c1a04451f8371f6c465ac9678
+    &verbose=true&show-all-intents=true
+    &log=true
+    &query=YOUR_QUERY_HERE
+    */
     call(query: string): Promise<any> {
         let endpoint = this.endpoint;
         let luisAppId = this.luisAppId;
@@ -57,11 +65,12 @@ export default class LUISController extends NLUController {
             "subscription-key": this.subscriptionKey,
             "timezoneOffset": "0",
             "verbose": true,
-            "q": query
+            "query": query
         }
 
-        let luisRequest = endpoint + luisAppId + '?' + querystring.stringify(queryParams);
-
+        // let luisRequest = endpoint + '' + luisAppId + '?' + querystring.stringify(queryParams);
+        let luisRequest = `${endpoint}luis/prediction/v3.0/apps/${luisAppId}/slots/production/predict?` + querystring.stringify(queryParams);
+        console.log(luisRequest);
         return new Promise((resolve, reject) => {
             request(luisRequest,
                 ((error: string, response: any, body: any) => {
@@ -84,12 +93,12 @@ export default class LUISController extends NLUController {
             thingOriginal: 'that'
         };
 
-        response.entities.forEach((entity: LUISEntity) => {
-            entitiesObject[`${entity.type}Original`] = entity.entity;
-            if (entity.resolution && entity.resolution.values) {
-                entitiesObject[`${entity.type}`] = entity.resolution.values[0];
-            }
-        });
+        // response.prediction.entities.forEach((entity: LUISEntity) => {
+        //     entitiesObject[`${entity.type}Original`] = entity.entity;
+        //     if (entity.resolution && entity.resolution.values) {
+        //         entitiesObject[`${entity.type}`] = entity.resolution.values[0];
+        //     }
+        // });
 
         return entitiesObject;
     }
@@ -109,15 +118,21 @@ export default class LUISController extends NLUController {
                 .then((response: LUISResponse) => {
                     let intentAndEntities: NLUIntentAndEntities = {
                         intent: '',
-                        entities: undefined,
-                        response: undefined
+                        intents: response.prediction.intents,
+                        entities: response.prediction.entities,
+                        response: response
                     }
-                    if (response && response.topScoringIntent) {
-                        intentAndEntities = {
-                            intent: response.topScoringIntent.intent,
-                            entities: this.getEntitiesWithResponse(response),
-                            response: response
-                        }
+                    if (response && response.prediction && response.prediction.topIntent) {
+                        intentAndEntities.intent = response.prediction.topIntent
+                        // intentAndEntities = {
+                        //     intent: response.prediction.topIntent,
+                        //     intents: response.prediction.intents
+                        //     entities: response.prediction.entities,
+                        //     response: response
+                        // }
+                    } else {
+                        console.log(`unknown results format:`);
+                        console.log(response);
                     }
                     resolve(intentAndEntities);
                 })
