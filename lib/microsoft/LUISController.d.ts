@@ -24,7 +24,8 @@ export default class LUISController extends NLUController {
     luisAppId: string;
     subscriptionKey: string;
     private _config;
-    constructor(config: any);
+    private _debug;
+    constructor(config: any, debug?: boolean);
     set config(config: any);
     call(query: string): Promise<any>;
     getEntitiesWithResponse(response: LUISResponse): any;

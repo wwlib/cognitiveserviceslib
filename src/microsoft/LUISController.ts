@@ -33,10 +33,12 @@ export default class LUISController extends NLUController {
     public subscriptionKey: string = '';
 
     private _config: any = {};
+    private _debug: boolean = false;
 
-    constructor(config: any) {
+    constructor(config: any, debug: boolean = false) {
         super();
         this.config = config;
+        this._debug = debug;
     }
 
     set config(config: any) {
@@ -58,6 +60,7 @@ export default class LUISController extends NLUController {
     &log=true
     &query=YOUR_QUERY_HERE
     */
+   
     call(query: string): Promise<any> {
         let endpoint = this.endpoint;
         let luisAppId = this.luisAppId;
@@ -70,12 +73,16 @@ export default class LUISController extends NLUController {
 
         // let luisRequest = endpoint + '' + luisAppId + '?' + querystring.stringify(queryParams);
         let luisRequest = `${endpoint}luis/prediction/v3.0/apps/${luisAppId}/slots/production/predict?` + querystring.stringify(queryParams);
-        console.log(luisRequest);
+        if (this._debug) {
+            console.log(luisRequest);
+        }
         return new Promise((resolve, reject) => {
             request(luisRequest,
                 ((error: string, response: any, body: any) => {
                     if (error) {
-                        // console.log(`LUISController: call: error:`, response, error);
+                        if (this._debug) {
+                            console.log(`LUISController: call: error:`, error, response);
+                        }
                         reject(error);
                     } else {
                         let body_obj: any = JSON.parse(body);
@@ -118,8 +125,8 @@ export default class LUISController extends NLUController {
                 .then((response: LUISResponse) => {
                     let intentAndEntities: NLUIntentAndEntities = {
                         intent: '',
-                        intents: response.prediction.intents,
-                        entities: response.prediction.entities,
+                        intents: response.prediction ? response.prediction.intents : [],
+                        entities: response.prediction? response.prediction.entities : [],
                         response: response
                     }
                     if (response && response.prediction && response.prediction.topIntent) {
@@ -131,8 +138,10 @@ export default class LUISController extends NLUController {
                         //     response: response
                         // }
                     } else {
-                        console.log(`unknown results format:`);
-                        console.log(response);
+                        if (this._debug) {
+                            console.log(`LUISController: getIntentAndEntities: unknown response format:`);
+                            console.log(response);
+                        }
                     }
                     resolve(intentAndEntities);
                 })
