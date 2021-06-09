@@ -34,11 +34,13 @@ export default class LUISController extends NLUController {
 
     private _config: any = {};
     private _debug: boolean = false;
+    private _apiVersion: string;
 
-    constructor(config: any, debug: boolean = false) {
+    constructor(config: any, options?: any) {
         super();
         this.config = config;
-        this._debug = debug;
+        this._debug = options ? options.debug : false;
+        this._apiVersion = options && options.apiVersion ? options.apiVersion : '3.0';
     }
 
     set config(config: any) {
@@ -68,11 +70,19 @@ export default class LUISController extends NLUController {
             "subscription-key": this.subscriptionKey,
             "timezoneOffset": "0",
             "verbose": true,
+            "show-all-intents=true": true,
             "query": query
         }
 
+        // legacy
         // let luisRequest = endpoint + '' + luisAppId + '?' + querystring.stringify(queryParams);
+
+        // apiVersion 3.0
         let luisRequest = `${endpoint}luis/prediction/v3.0/apps/${luisAppId}/slots/production/predict?` + querystring.stringify(queryParams);
+        if (this._apiVersion === '2.0') {
+            luisRequest = `${endpoint}luis/v2.0/apps/${luisAppId}?` + querystring.stringify(queryParams);
+        }
+
         if (this._debug) {
             console.log(luisRequest);
         }
