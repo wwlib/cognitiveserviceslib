@@ -26,6 +26,7 @@ export default class LUISController extends NLUController {
     private _config;
     private _debug;
     private _apiVersion;
+    private _showAllIntents;
     constructor(config: any, options?: any);
     set config(config: any);
     call(query: string): Promise<any>;

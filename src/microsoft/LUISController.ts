@@ -35,12 +35,14 @@ export default class LUISController extends NLUController {
     private _config: any = {};
     private _debug: boolean = false;
     private _apiVersion: string;
+    private _showAllIntents: boolean = false;
 
     constructor(config: any, options?: any) {
         super();
         this.config = config;
         this._debug = options ? options.debug : false;
         this._apiVersion = options && options.apiVersion ? options.apiVersion : '3.0';
+        this._showAllIntents = options && options.showAllIntents ? options.showAllIntents : false;
     }
 
     set config(config: any) {
@@ -70,7 +72,7 @@ export default class LUISController extends NLUController {
             "subscription-key": this.subscriptionKey,
             "timezoneOffset": "0",
             "verbose": true,
-            "show-all-intents=true": true,
+            "show-all-intents": this._showAllIntents,
             "query": query
         }
 
