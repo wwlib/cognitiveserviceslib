@@ -1,6 +1,6 @@
 import { ChatbotSession, ChatbotStatus } from '../ChatbotSession';
 
-const request = require('request');
+const axios = require('axios');
 const WebSocket = require('ws');
 
 export default class HealthBotSession extends ChatbotSession {
@@ -42,28 +42,28 @@ export default class HealthBotSession extends ChatbotSession {
         return new Promise<any>((resolve, reject) => {
             const options = {
                 method: 'POST',
-                uri: 'https://directline.botframework.com/v3/directline/conversations', //'https://directline.botframework.com/v3/directline/tokens/generate',
+                url: 'https://directline.botframework.com/v3/directline/conversations', //'https://directline.botframework.com/v3/directline/tokens/generate',
                 headers: {
                     'Authorization': 'Bearer ' + this._directlineSecret
                 },
-                json: {
+                data: {
                     User: { Id: this._userId }
                 }
             };
 
-            request.post(options, (error: any, response: any, body: any) => {
-                if (!error && response.statusCode < 300) {
-                    // console.log(`HealthBotSession: init: response body:`, body);
-                    this._conversationId = body.conversationId;
-                    this._socketUrl = body.streamUrl;
+            axios(options)
+                .then((response: any) => {
+                    // console.log(response);
+                    this._conversationId = response.data.conversationId;
+                    this._socketUrl = response.data.streamUrl;
                     this._startWebSocket(this._socketUrl);
-                    resolve(body);
-                }
-                else {
-                    // console.log('HealthBotSession: call to retrieve token from Direct Line failed');
+                    resolve(response.data);
+
+                })
+                .catch((error: any) => {
+                    console.log(error);
                     reject({ error: 'HealthBotSession: call to retrieve token from Direct Line failed' })
-                }
-            });
+                });
         });
     }
 
@@ -87,25 +87,26 @@ export default class HealthBotSession extends ChatbotSession {
 
             const options = {
                 method: 'POST',
-                uri: `https://directline.botframework.com/v3/directline/conversations/${this._conversationId}/activities`,
+                url: `https://directline.botframework.com/v3/directline/conversations/${this._conversationId}/activities`,
                 headers: {
                     'Authorization': 'Bearer ' + this._directlineSecret
                 },
-                json: message
+                data: message
             };
 
             console.log(`SEND_ACTIVITY: --> id: ${this._conversationId}, input: ${input}`);
-            request.post(options, (error: any, response: any, body: any) => {
-                if (!error && response.statusCode < 300) {
+
+            axios(options)
+                .then((response: any) => {
+                    // console.log(response);
                     console.log(`SEND_ACTIVITY: <-- id: ${this._conversationId}, input: ${input}: body:`);
-                    console.log(body);
-                    resolve(body);
-                }
-                else {
-                    console.log('Call to send activity to Direct Line failed:', error, response.statusCode);
-                    reject({error, statusCode: response.statusCode});
-                }
-            });
+                    console.log(response.data);
+                    resolve(response.data);
+                })
+                .catch((error: any) => {
+                    console.log('Call to send activity to Direct Line failed:', error);
+                    reject({ error, statusCode: 0 });
+                });
         });
     }
 

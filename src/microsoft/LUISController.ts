@@ -1,7 +1,7 @@
 import NLUController, { NLUIntentAndEntities, NLURequestOptions, NLULanguageCode } from '../NLUController';
 import AsyncToken from '../AsyncToken';
 
-const request = require('request');
+const axios = require('axios');
 const querystring = require('querystring');
 
 export type LUISIntent = {
@@ -35,12 +35,14 @@ export default class LUISController extends NLUController {
     private _config: any = {};
     private _debug: boolean = false;
     private _apiVersion: string;
+    private _showAllIntents: boolean = false;
 
     constructor(config: any, options?: any) {
         super();
         this.config = config;
         this._debug = options ? options.debug : false;
         this._apiVersion = options && options.apiVersion ? options.apiVersion : '3.0';
+        this._showAllIntents = options && options.showAllIntents ? options.showAllIntents : false;
     }
 
     set config(config: any) {
@@ -62,7 +64,7 @@ export default class LUISController extends NLUController {
     &log=true
     &query=YOUR_QUERY_HERE
     */
-   
+
     call(query: string): Promise<any> {
         let endpoint = this.endpoint;
         let luisAppId = this.luisAppId;
@@ -70,7 +72,7 @@ export default class LUISController extends NLUController {
             "subscription-key": this.subscriptionKey,
             "timezoneOffset": "0",
             "verbose": true,
-            "show-all-intents=true": true,
+            "show-all-intents": this._showAllIntents,
             "query": query
         }
 
@@ -87,18 +89,23 @@ export default class LUISController extends NLUController {
             console.log(luisRequest);
         }
         return new Promise((resolve, reject) => {
-            request(luisRequest,
-                ((error: string, response: any, body: any) => {
-                    if (error) {
-                        if (this._debug) {
-                            console.log(`LUISController: call: error:`, error, response);
-                        }
-                        reject(error);
-                    } else {
-                        let body_obj: any = JSON.parse(body);
-                        resolve(body_obj);
+            axios.get(luisRequest)
+                .then(function (response: any) {
+                    // handle success
+                    console.log(response.data);
+                    resolve(response.data);
+                })
+                .catch((error: any) => {
+                    // handle error
+                    // console.log(error);
+                    if (this._debug) {
+                        console.log(`LUISController: call: error:`, error);
                     }
-                }));
+                    reject(error);
+                })
+                .then(function () {
+                    // always executed
+                });
         });
     }
 
@@ -133,10 +140,11 @@ export default class LUISController extends NLUController {
         token.complete = new Promise<NLUIntentAndEntities>((resolve, reject) => {
             this.call(utterance)
                 .then((response: LUISResponse) => {
+                    console.log(`getIntentAndEntities: response:`, response);
                     let intentAndEntities: NLUIntentAndEntities = {
                         intent: '',
                         intents: response.prediction ? response.prediction.intents : [],
-                        entities: response.prediction? response.prediction.entities : [],
+                        entities: response.prediction ? response.prediction.entities : [],
                         response: response
                     }
                     if (response && response.prediction && response.prediction.topIntent) {
