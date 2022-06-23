@@ -1,0 +1,33 @@
+import * as ASRTypes from './ASRTypes';
+import { LanguageCode } from './Language';
+import { Logger } from "../logger";
+
+export type Callback<T> = (data: T) => void;
+
+export interface ASRStreamingSessionConfig extends ASRTypes.ASRConfig {
+  lang: LanguageCode;
+  hints?: string[];
+  earlyEOS?: string[];
+  eosTimeout?: number;
+  providerConfig?: any;
+}
+
+/**
+ * Base interface to be implemented by all ASRStreamingSession providers
+ */
+export interface ASRStreamingSession {
+  provideAudio(audioBuffer: Buffer): void;
+
+  start(): Promise<ASRTypes.ASRResult>;
+  stop(): void;
+
+  onStartOfSpeech(handler: Callback<void>): void;
+  onEndOfSpeech(handler: Callback<void>): void;
+  onResult(handler: Callback<ASRTypes.ASRResult>): void;
+
+  getLastIncremental(): ASRTypes.ASRResult;
+
+  dispose(): void;
+}
+
+export type ASRStreamingSessionProvider = (config: ASRStreamingSessionConfig, log: Logger) => ASRStreamingSession;
