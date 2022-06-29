@@ -63,8 +63,10 @@ export default class AudioSourceWaveStreamer {
     dispose() {
         this._audioSource.removeListener('audio', this._onAudioHandler);
         if (this._readStream) {
+            // console.log('AudioSourceWaveStreamer: dispose: destroying _readStream.')
             this._readStream.push(null);
-        this._readStream = undefined;
+            this._readStream.destroy();
+            this._readStream = undefined;
         }
     }
 

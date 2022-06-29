@@ -1,22 +1,23 @@
 export class Logger {
-  constructor(private context = {}, private section: string = "cognitiveserviceslib") {}
 
-  write(level: string, action: string, ...details: any[]) {
-    console.log(`${level}: [${this.section}] ${action}`, details)
+  private _section: string
+
+  constructor(section: string = "cognitiveserviceslib") {
+    this._section = section
   }
 
-  child(section: string, childContext = {}) {
+  write(level: string, action: string, ...details: any[]) {
+    console.log(`${level}: [${this._section}] ${action}`, details)
+  }
+
+  child(section: string) {
     return new Logger(
-      {
-        ...this.context,
-        ...childContext,
-      },
-      this.section + "." + section,
+      this._section + "." + section,
     );
   }
 
-  createChild(section: string, childContext = {}) {
-    return this.child(section, childContext);
+  createChild(section: string) {
+    return this.child(section);
   }
 
   debug = (action: string, ...details: any) => this.write("debug", action, ...details);
