@@ -6,7 +6,7 @@ export declare type Callback<T> = (data: T) => void;
 export interface ASRStreamingSessionConfig extends ASRTypes.ASRConfig {
     lang: LanguageCode;
     hints?: string[];
-    earlyEOS?: string[];
+    regexpEOS?: string[];
     eosTimeout?: number;
     providerConfig?: any;
 }

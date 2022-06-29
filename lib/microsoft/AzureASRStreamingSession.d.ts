@@ -8,7 +8,7 @@ export declare class AzureASRStreamingSession implements ASRStreamingSession {
     private eosHandler;
     private resultHandler;
     private lastASRResult;
-    private fastEOSRegex;
+    private regexpEOSRegex;
     private log;
     private audioStream;
     private recognizer;

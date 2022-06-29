@@ -1,4 +1,3 @@
-/* tslint:disable:no-empty */
 import * as ASRTypes from '../asr/ASRTypes';
 import {
   AudioConfig,
@@ -14,7 +13,7 @@ import {
   AutoDetectSourceLanguageConfig,
   SpeechRecognitionResult,
 } from "microsoft-cognitiveservices-speech-sdk/distrib/lib/src/sdk/Exports";
-import { FastEOS } from "../asr/FastEOS";
+import { RegExpEOS } from "../asr/RegExpEOS";
 import { ASRStreamingSession, ASRStreamingSessionConfig, Callback } from "../asr/ASRStreamingSession";
 import { Logger } from "../Logger";
 
@@ -25,7 +24,7 @@ export class AzureASRStreamingSession implements ASRStreamingSession {
   private resultHandler: Callback<ASRTypes.ASRResult> = () => { };
   private lastASRResult: ASRTypes.ASRResult | undefined;
 
-  private fastEOSRegex: RegExp | null = null;
+  private regexpEOSRegex: RegExp | null = null;
 
   private log: Logger;
   private audioStream: PushAudioInputStream;
@@ -34,8 +33,8 @@ export class AzureASRStreamingSession implements ASRStreamingSession {
   private resolveStart: Callback<ASRTypes.ASRResult> = () => { };
 
   constructor(config: ASRStreamingSessionConfig, log: Logger) {
-    if (config.earlyEOS && config.earlyEOS.length > 0) {
-      this.fastEOSRegex = FastEOS.buildRegex(config.earlyEOS);
+    if (config.regexpEOS && config.regexpEOS.length > 0) {
+      this.regexpEOSRegex = RegExpEOS.buildRegex(config.regexpEOS);
     }
 
     this.log = log.child("ASR");
@@ -92,11 +91,11 @@ export class AzureASRStreamingSession implements ASRStreamingSession {
       };
 
       if (!this.stopped) {
-        if (this.fastEOSRegex && this.fastEOSRegex.test(eventArgs.result.text)) {
+        if (this.regexpEOSRegex && this.regexpEOSRegex.test(eventArgs.result.text)) {
           this.log.debug(
-            `Incremental transcription contains a FastEOS trigger word/phrase. Stopping ASR and returning.`,
+            `Incremental transcription contains a RegExpEOS trigger word/phrase. Stopping ASR and returning.`,
           );
-          this.lastASRResult.annotation = ASRTypes.ASRAnnotation.FAST_EOS;
+          this.lastASRResult.annotation = ASRTypes.ASRAnnotation.REGEXP_EOS;
 
           this.eosHandler();
           this.stop();
@@ -222,7 +221,7 @@ export class AzureASRStreamingSession implements ASRStreamingSession {
     this.eosHandler = () => { };
     this.resultHandler = () => { };
     this.lastASRResult = undefined;
-    this.fastEOSRegex = null;
+    this.regexpEOSRegex = null;
     this.audioStream.close;
     this.recognizer.close;
   }

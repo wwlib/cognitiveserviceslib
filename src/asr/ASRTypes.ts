@@ -2,8 +2,8 @@
 export declare enum ASRAnnotation {
     /** Label used when the ASR transcription shouldn't be acted upon (e.g. non-user speech) */
     GARBAGE = "GARBAGE",
-    /** Label used when the ASR transcription was stopped early by Fast EOS */
-    FAST_EOS = "FAST_EOS",
+    /** Label used when the ASR transcription was stopped early by RegExp EOS */
+    REGEXP_EOS = "REGEXP_EOS",
     /** Label used when ASR never detected SOS */
     SOS_TIMEOUT = "SOS_TIMEOUT",
     /** Label used when ASR continuously receives speech until the max allowed time */
@@ -27,8 +27,8 @@ export interface ASRConfig {
     maxSpeechTimeout?: number;
     /** List of hint phrases to add to Google */
     hints?: string[];
-    /** A list of words and phrases for fast EOS */
-    earlyEOS?: string[];
+    /** A list of words and phrases for regexp EOS */
+    regexpEOS?: string[];
     /** Languages to recognize, defaults to en-US and es-ES */
     detectLangs?: string[];
 }
