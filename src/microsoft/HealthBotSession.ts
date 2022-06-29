@@ -220,8 +220,8 @@ export default class HealthBotSession extends ChatbotSession {
                 "localTimestamp": "2020-06-29T13:56:36.763+00:00",
                 "channelId": "directline",
                 "from": {
-                    "id": "ntd-rapo-jibo-hcbot1-3yqmqrj",
-                    "name": "ntd-rapo-jibo-hcbot1"
+                    "id": "hcbot1-3yqmqrj",
+                    "name": "hcbot1"
                 },
                 "conversation": {
                     "id": "BHz9MwrbXPW5BXV9ZBU4rl-j"
@@ -240,11 +240,6 @@ export default class HealthBotSession extends ChatbotSession {
                             "type": "imBack",
                             "title": "Jane",
                             "value": "Jane"
-                        },
-                        {
-                            "type": "imBack",
-                            "title": "Jibo",
-                            "value": "Jibo"
                         }
                     ]
                 },

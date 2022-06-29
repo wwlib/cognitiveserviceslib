@@ -23,6 +23,12 @@ import CognitiveServicesConfig, { CognitiveServicesConfigOptions, MicrosoftOptio
 import { ChatbotSession, ChatbotResponse, ChatbotStatus } from './ChatbotSession';
 import MockChatbotSession from './MockChatbotSession';
 import HealthBotSession from './microsoft/HealthBotSession';
+import MicrosoftConfig from './microsoft/MicrosoftConfig';
+import { AzureASRStreamingSession } from './microsoft/AzureASRStreamingSession';
+import { Logger } from './Logger';
+
+
+export * from './asr';
 
 export {
     LUISController,
@@ -67,4 +73,7 @@ export {
     ChatbotStatus,
     MockChatbotSession,
     HealthBotSession,
+    MicrosoftConfig,
+    AzureASRStreamingSession,
+    Logger
 }
