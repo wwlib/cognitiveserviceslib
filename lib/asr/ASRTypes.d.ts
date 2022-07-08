@@ -44,4 +44,6 @@ export interface ASRResult {
     lang?: string;
     /** */
     langConfidence?: "Unknown" | "Low" | "Medium" | "High";
+    /** Full json result */
+    json?: any;
 }

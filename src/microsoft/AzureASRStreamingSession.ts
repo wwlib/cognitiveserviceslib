@@ -81,11 +81,11 @@ export class AzureASRStreamingSession implements ASRStreamingSession {
     };
 
     this.recognizer.recognizing = (_: Recognizer, eventArgs: SpeechRecognitionEventArgs) => {
-      const INTERMEDIATE_CONFIDENCE = 0.5;
+      const INCREMENTAL_CONFIDENCE = 0.5;
 
       this.lastASRResult = {
         text: eventArgs.result.text,
-        confidence: INTERMEDIATE_CONFIDENCE, // MS doesn't send confidence for intermediate results
+        confidence: INCREMENTAL_CONFIDENCE, // MS doesn't send confidence for incremental results
         lang: eventArgs.result.language,
         langConfidence: parseLanguageDetectionConfidence(eventArgs.result.languageDetectionConfidence),
       };
@@ -194,6 +194,7 @@ export class AzureASRStreamingSession implements ASRStreamingSession {
               confidence: resultDetails.NBest[0].Confidence,
               lang: result.language,
               langConfidence: parseLanguageDetectionConfidence(result.languageDetectionConfidence),
+              json: result.json,
             };
           } else {
             this.lastASRResult = {

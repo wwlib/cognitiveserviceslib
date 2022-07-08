@@ -4,6 +4,16 @@ import { Logger } from "../logger";
 
 export type Callback<T> = (data: T) => void;
 
+export enum ASRStreamingSessionEvent {
+  SOS = 'SOS',
+  EOS = 'EOS',
+  RESULT = 'RESULT',
+  SESSION_ENDED = 'SESSION_ENDED',
+  ERROR = 'ERROR',
+  EOS_TIMEOUT = 'EOS_TIMEOUT',
+  SESSION_TIMEOUT = 'SESSION_TIMEOUT',
+}
+
 export interface ASRStreamingSessionConfig extends ASRTypes.ASRConfig {
   lang: LanguageCode;
   hints?: string[];

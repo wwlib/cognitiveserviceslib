@@ -1,5 +1,5 @@
 const WavFileWriter = require('wav').FileWriter;
-const { ASRStreamingSessionWrapper , ASRFactory, WaveFileAudioSource, AudioUtils } = require('../lib')
+const { ASRStreamingSessionWrapper, WaveFileAudioSource, AudioUtils } = require('../lib')
 const { Logger } = require('../lib/Logger')
 
 const logger = new Logger()
@@ -9,7 +9,7 @@ const config = require('./config.json');
 const asrConfig = {
     lang: 'en-US',
     hints: undefined,
-    earlyEOS: undefined,
+    regexpEOS: undefined,
     maxSpeechTimeout: 60 * 1000,
     eosTimeout: 2000,
     providerConfig: config.Microsoft,
