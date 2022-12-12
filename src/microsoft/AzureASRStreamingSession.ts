@@ -39,12 +39,12 @@ export class AzureASRStreamingSession implements ASRStreamingSession {
 
     this.log = log.child("ASR");
 
-    this.log.debug("Creating ASR session", config);
+    this.log.debug("Creating ASR session"); // , config);
 
     const subscriptionKey = config.providerConfig?.AzureSpeechSubscriptionKey || '';
     const region = config.providerConfig?.AzureSpeechRegion || 'eastus';
 
-    this.log.debug("subscriptionKey, region", subscriptionKey, region);
+    // this.log.debug("subscriptionKey, region", subscriptionKey, region);
 
     if (config.encoding && config.encoding !== "LINEAR16") {
       throw new Error("Only LINEAR16 encoding is supported");
